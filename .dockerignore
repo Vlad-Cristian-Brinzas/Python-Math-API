@@ -1,0 +1,6 @@
+# Ignore Python virtual environment directories
+.venv
+
+# Ignore Git directories
+.git
+.gitignore
