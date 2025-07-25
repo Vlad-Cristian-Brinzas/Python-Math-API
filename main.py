@@ -1,6 +1,8 @@
 from fastapi import FastAPI, HTTPException, Query
-from math_util import pow, factorial, fibonacci
+from persistence import setup_database
+from services import pow, factorial, fibonacci
 
+setup_database()  # Ensure the database is set up before starting the API
 app = FastAPI(
     title="Math Utility API",
     description=(
@@ -10,6 +12,8 @@ app = FastAPI(
 )
 # About "mandatory to use Pydantic for request validation":
 # FastAPI uses Pydantic internally anyway, so we technically meet that?
+# Similar for "any non-SOAP API standard":
+# FastAPI is HTTP-based by default.
 
 
 @app.get(
