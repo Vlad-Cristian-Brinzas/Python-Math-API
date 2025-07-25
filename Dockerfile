@@ -4,11 +4,14 @@ FROM python:3.13.5-slim
 # Set working directory
 WORKDIR /app
 
-# Copy project files
-COPY ./ ./
+# Copy requirements file
+COPY requirements.txt .
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy rest of the project files
+COPY . .
 
 # Expose the port that the app runs on
 EXPOSE 8000

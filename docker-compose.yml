@@ -1,0 +1,13 @@
+services:
+  python-math-api:
+    build: .
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    # Volume, so we can edit code without rebuilding the image
+    volumes:
+      - .:/app
+    # For dev, leave --reload on
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+  
+  # Prometheus?
