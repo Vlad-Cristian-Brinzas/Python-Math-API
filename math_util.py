@@ -2,7 +2,7 @@ from functools import lru_cache
 
 
 # With floating-point inputs, LRU cache may not be very worth it.
-def pow(number: float, exponent: float) -> float:
+def pow(base: float, exponent: float) -> float:
     """
     Raises a number to the power of an exponent.
 
@@ -10,7 +10,7 @@ def pow(number: float, exponent: float) -> float:
     :param exponent: The exponent to raise the base number to.
     :return: The result of raising the base number to the exponent.
     """
-    return number ** exponent
+    return base ** exponent
     # TODO: not sure just using the inbuilt ** is a permissible approach
 
 
