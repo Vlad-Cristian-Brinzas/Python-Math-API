@@ -1,3 +1,7 @@
+from functools import lru_cache
+
+
+# With floating-point inputs, LRU cache may not be very worth it.
 def pow(number: float, exponent: float) -> float:
     """
     Raises a number to the power of an exponent.
@@ -10,6 +14,7 @@ def pow(number: float, exponent: float) -> float:
     # TODO: not sure just using the inbuilt ** is a permissible approach
 
 
+@lru_cache(maxsize=128)
 def fibonacci(n: int) -> int:
     """
     Computes the nth Fibonacci number.
@@ -21,14 +26,14 @@ def fibonacci(n: int) -> int:
         raise ValueError("n must be a non-negative integer")
     elif n == 0:
         return 0
+    elif n == 1:
+        return 1
     else:
-        a, b = 0, 1
-        for _ in range(2, n + 1):
-            a, b = b, a + b
-        return b
-    # TODO: this is not a very efficient implementation as n grows large
+        return fibonacci(n - 1) + fibonacci(n - 2)
+        # Recursive approach for memoization effciency
 
 
+@lru_cache(maxsize=128)
 def factorial(n: int) -> int:
     """
     Computes the factorial of a non-negative integer n.
@@ -38,7 +43,8 @@ def factorial(n: int) -> int:
     """
     if n < 0:
         raise ValueError("n must be a non-negative integer")
-    result = 1
-    for i in range(2, n + 1):
-        result *= i
-    return result
+    elif n == 0 or n == 1:
+        return 1
+    else:
+        return n * factorial(n - 1)
+        # Recursive approach for memoization efficiency
