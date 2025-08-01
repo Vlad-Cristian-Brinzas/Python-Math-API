@@ -1,4 +1,5 @@
 from sqlite3 import connect
+from models import OperationRecord
 
 DB_NAME = 'python_math_api.db'
 DB_FOLDER = '../data'
@@ -38,7 +39,7 @@ def setup_database():
         conn.commit()
 
 
-def log_api_call(operation: str, input_data: str, result: str):
+def log_api_call(operation: OperationRecord):
     """
     Logs an API call to the database.
 
@@ -53,6 +54,6 @@ def log_api_call(operation: str, input_data: str, result: str):
         cursor.execute('''
             INSERT INTO api_calls (operation, input_data, result)
             VALUES (?, ?, ?)
-        ''', (operation, input_data, result))
+        ''', (operation.operation, operation.input_data, operation.result))
 
         conn.commit()
