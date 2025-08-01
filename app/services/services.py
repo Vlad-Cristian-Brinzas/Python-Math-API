@@ -1,5 +1,5 @@
-import math_util
-from persistence import log_api_call
+import utils.math_util as math_util
+from services.persistence import log_api_call
 
 
 def pow(base: float, exponent: float) -> float:

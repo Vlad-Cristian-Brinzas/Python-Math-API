@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Query
-from persistence import setup_database
+from services.persistence import setup_database
 from monitoring import prometheus_counter
-from services import pow, factorial, fibonacci
+from services.services import pow, factorial, fibonacci
 
 setup_database()  # Ensure the database is set up before starting the API
 app = FastAPI(
