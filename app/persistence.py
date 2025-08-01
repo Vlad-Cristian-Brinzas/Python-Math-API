@@ -1,6 +1,8 @@
 from sqlite3 import connect
 
 DB_NAME = 'python_math_api.db'
+DB_FOLDER = '../data'
+DB_PATH = f"{DB_FOLDER}/{DB_NAME}"
 
 
 def get_db_connection():
@@ -8,7 +10,7 @@ def get_db_connection():
     Establishes a connection to the SQLite database.
     Returns a connection object.
     """
-    conn = connect(DB_NAME)
+    conn = connect(DB_PATH)
     return conn
 
 
