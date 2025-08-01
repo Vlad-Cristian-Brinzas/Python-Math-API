@@ -6,7 +6,7 @@ services:
       - "8001:8001"  # Prometheus metrics endpoint
     # Volume, so we can edit code without rebuilding the image
     volumes:
-      - .:/app
+      - ./app:/app
     # For dev, leave --reload on
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
   
