@@ -23,7 +23,7 @@ A simple Python-based API for mathematical operations, built for the DavaX progr
    ```
 2. Run the API:
    ```bash
-   uvicorn main:app --reload
+   uvicorn app.main:app --reload
    ```
 3. Access the API docs at [http://localhost:8000/docs](http://localhost:8000/docs)
 
@@ -42,16 +42,20 @@ A simple Python-based API for mathematical operations, built for the DavaX progr
 - `GET /fibonacci?n=<int>`: Fibonacci function
 
 ## Project Structure
-- `main.py` — FastAPI app entry point
-- `services.py` — Business logic for math operations
-- `persistence.py` — SQLite database setup and logging
-- `monitoring.py` — Prometheus metrics server
-- `math_util.py` — Math utility functions (implementations)
+- `app/`
+  - `main.py` — FastAPI app entry point
+  - `controllers/math_routes.py` — API route definitions
+  - `services/` — Business logic for math operations
+  - `models/` — (If present) Data models and schemas
+  - `monitoring/` — Prometheus metrics server setup
+  - `utils/` — Math utility functions (implementations)
+- `data/` — SQLite database files (if used)
 - `requirements.txt` — Python dependencies
-- `docker-compose.yml`, `Dockerfile` — Containerization setup
+- `docker-compose.yml`, `docker-compose.override.yml`, `Dockerfile` — Containerization setup
+- `prometheus.yml` — Prometheus configuration
 
 ## Extending
-You can add new mathematical operations by updating `math_util.py` and `services.py`, and exposing new endpoints in `main.py`.
+You can add new mathematical operations by updating `app/utils/` and `app/services/`, and exposing new endpoints in `app/controllers/math_routes.py` and `app/main.py`.
 
 ---
 
