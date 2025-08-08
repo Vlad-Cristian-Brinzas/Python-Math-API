@@ -1,13 +1,14 @@
 services:
   python-math-api:
-    build: .
+    build:
+      context: ./
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"  # FastAPI app
       - "8001:8001"  # Prometheus metrics endpoint
-    # Volume, so we can edit code without rebuilding the image
-    volumes:
-      - ./data:/data
     command: uvicorn main:app --host 0.0.0.0 --port 8000
+    depends_on:
+      - kafka
   
   prometheus:
     image: prom/prometheus
@@ -18,3 +19,32 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--web.listen-address=:9090'
+  
+  kafka:
+    image: bitnami/kafka
+    ports:
+      - "9092:9092"  # Kafka broker
+    environment:
+      KAFKA_CFG_NODE_ID: 1
+      KAFKA_CFG_PROCESS_ROLES: broker,controller
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_CFG_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://kafka:9093
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CFG_LOG_RETENTION_HOURS: 48
+      ALLOW_PLAINTEXT_LISTENER: 'yes'  # For local dev only
+      KAFKA_KRAFT_CLUSTER_ID: 'kraft-cluster-1' # must be unique per cluster
+    volumes:
+      - ./data/kafka/data:/bitnami/kafka/data
+      - ./data/kafka/logs:/bitnami/kafka/logs
+  
+  log_consumer:
+    build:
+      context: ./
+      dockerfile: log_consumer/Dockerfile
+    volumes:
+      - ./data/sql:/data/sql
+    depends_on:
+      - kafka

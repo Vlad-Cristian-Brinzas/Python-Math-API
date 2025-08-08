@@ -1,8 +1,7 @@
 from fastapi import FastAPI
-from services.persistence import setup_database
 from controllers.math_routes import math_router
 
-setup_database()  # Ensure the database is set up before starting the API
+print("Starting FastAPI application...")
 app = FastAPI(
     title="Math Utility API",
     description=(

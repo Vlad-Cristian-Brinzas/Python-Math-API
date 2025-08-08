@@ -1,11 +1,11 @@
 import utils.math_util as math_util
-from models import OperationRecord
-from services.persistence import log_api_call
+from shared.models import OperationRecord
+from services.kafka_messaging import send_operation_record
 
 
 def pow(base: float, exponent: float) -> float:
     result = math_util.pow(base, exponent)
-    log_api_call(OperationRecord(
+    send_operation_record(OperationRecord(
         operation="pow",
         input_data=f"base={base}, exponent={exponent}",
         result=str(result))
@@ -15,7 +15,7 @@ def pow(base: float, exponent: float) -> float:
 
 def factorial(n: int) -> int:
     result = math_util.factorial(n)
-    log_api_call(OperationRecord(
+    send_operation_record(OperationRecord(
         operation="factorial",
         input_data=f"n={n}",
         result=str(result))
@@ -25,7 +25,7 @@ def factorial(n: int) -> int:
 
 def fibonacci(n: int) -> int:
     result = math_util.fibonacci(n)
-    log_api_call(OperationRecord(
+    send_operation_record(OperationRecord(
         operation="fibonacci",
         input_data=f"n={n}",
         result=str(result))

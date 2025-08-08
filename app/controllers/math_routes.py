@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException, Query
-from services.services import pow, factorial, fibonacci
+from services.math_service import pow, factorial, fibonacci
 from monitoring import prometheus_counter
 
 
+print("Setting up routes...")
 math_router = APIRouter()
 
 

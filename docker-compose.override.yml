@@ -4,5 +4,13 @@ services:
     volumes:
       - ./app:/app
       - ./shared:/app/shared
+    environment:
+      # Unbuffered output so if container hangs up we can see
+      - PYTHONUNBUFFERED=1
     # For dev, leave --reload on
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+  
+  log_consumer:
+    environment:
+      # Unbuffered output so if container hangs up we can see
+      - PYTHONUNBUFFERED=1
