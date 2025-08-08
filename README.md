@@ -1,33 +1,22 @@
 # Python Math API
 
-A simple Python-based API for mathematical operations, built for the DavaX programme. This project demonstrates a FastAPI application with database persistence and Prometheus monitoring, and is easily extensible for further features.
+A Python-based API for mathematical operations, built for the DavaX programme. This project demonstrates a FastAPI application with Kafka-based logging, database persistence, and Prometheus monitoring. The system is fully containerized and orchestrated via Docker Compose.
 
 ## Features
 - **Power Function**: Calculate `base` raised to the power of `exponent`.
 - **Factorial Function**: Compute the factorial of a non-negative integer.
 - **Fibonacci Function**: Get the nth Fibonacci number.
-- **API Call Logging**: All operations are logged to a local SQLite database.
+- **API Call Logging**: All operations are logged to a Kafka topic and persisted to a local SQLite database by a dedicated log consumer service.
 - **Prometheus Monitoring**: Exposes metrics for API usage on a separate port.
-- **Dockerized**: Includes Docker and Docker Compose setup for easy deployment.
+- **Kafka Integration**: Decoupled logging using Kafka and a separate consumer service.
+- **Dockerized**: All services (API, log consumer, Kafka, Prometheus) are managed via Docker Compose for easy deployment and development.
 
 ## Requirements
-- Python 3.8+
-- Docker & Docker Compose (for containerized usage)
+- Docker & Docker Compose (recommended for all usage due to Kafka dependency)
 
 ## Installation & Usage
 
-### 1. Local Development
-1. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. Run the API:
-   ```bash
-   uvicorn app.main:app --reload
-   ```
-3. Access the API docs at [http://localhost:8000/docs](http://localhost:8000/docs)
-
-### 2. With Docker Compose
+### Recommended: With Docker Compose
 1. Build and start all services:
    ```bash
    docker-compose up --build
@@ -36,26 +25,37 @@ A simple Python-based API for mathematical operations, built for the DavaX progr
 3. Prometheus metrics at [http://localhost:8001](http://localhost:8001)
 4. Prometheus UI at [http://localhost:9090](http://localhost:9090)
 
+> **Note:** Due to the Kafka dependency, running the API outside Docker Compose is not recommended. All services (API, Kafka, log consumer, Prometheus) are orchestrated together for a seamless experience.
+
 ## API Endpoints
 - `GET /pow?base=<float>&exponent=<float>`: Power function
 - `GET /factorial?n=<int>`: Factorial function
 - `GET /fibonacci?n=<int>`: Fibonacci function
 
 ## Project Structure
-- `app/`
-  - `main.py` — FastAPI app entry point
-  - `controllers/math_routes.py` — API route definitions
-  - `services/` — Business logic for math operations
-  - `models/` — (If present) Data models and schemas
-  - `monitoring/` — Prometheus metrics server setup
-  - `utils/` — Math utility functions (implementations)
-- `data/` — SQLite database files (if used)
-- `requirements.txt` — Python dependencies
-- `docker-compose.yml`, `docker-compose.override.yml`, `Dockerfile` — Containerization setup
-- `prometheus.yml` — Prometheus configuration
+```
+┌─ app/
+│  ├─ main.py                    FastAPI app entry point
+│  ├─ controllers/               API route definitions
+│  ├─ services/                  Business logic and Kafka producer
+│  ├─ utils/                     Math utility functions
+│  └─ monitoring/                Prometheus metrics server setup
+├─ log_consumer/
+│  ├─ log_consumer.py            Kafka consumer and DB logger
+│  ├─ persistence.py             SQLite persistence logic
+│  ├─ requirements.txt           Dependencies for the consumer service
+│  └─ Dockerfile                 Dockerfile for the log consumer
+├─ shared/                       Shared Pydantic models
+├─ data/                         SQLite database and Kafka data (persisted by Docker)
+├─ requirements.txt              Python dependencies for the API
+├─ docker-compose.yml            Containerization setup
+├─ docker-compose.override.yml   Overrides for development ease-of-use
+├─ Dockerfile                    Dockerfile for the API
+└─ prometheus.yml                Prometheus configuration
+```
 
 ## Extending
-You can add new mathematical operations by updating `app/utils/` and `app/services/`, and exposing new endpoints in `app/controllers/math_routes.py` and `app/main.py`.
+You can add new mathematical operations by updating `app/utils/` and `app/services/`, and exposing new endpoints in `app/controllers/` and `app/main.py`. Logging and monitoring will be handled automatically if you follow the existing patterns.
 
 ---
 
