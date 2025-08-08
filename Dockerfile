@@ -11,6 +11,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy rest of the project files
+# (Shared in its own folder, since that's how we access it)
+COPY shared/ shared/
 COPY app .
 
 # Expose the port that the app runs on

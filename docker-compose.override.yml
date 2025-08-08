@@ -3,5 +3,6 @@ services:
     # Volume, so we can hot-reload code without rebuilding the image
     volumes:
       - ./app:/app
+      - ./shared:/app/shared
     # For dev, leave --reload on
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
